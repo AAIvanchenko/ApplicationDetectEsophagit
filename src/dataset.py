@@ -4,6 +4,7 @@ import numpy as np
 
 from preprocessing_img import letterbox
 
+# нужно будет при вызове данного класса написать трансформ с данной функцией: del_area_behind_countour
 
 VID_FORMATS = ['mp4', 'mkv']
 
