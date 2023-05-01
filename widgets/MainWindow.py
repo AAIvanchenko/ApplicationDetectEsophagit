@@ -20,8 +20,10 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self._menu_is_collapsed = False
         self.menuButton.clicked.connect(self.menu.slideLeftMenu)
 
-        self.video.clicked.connect(self._load_image_by_dialog)
+        
         #нажатие на кнопки
+        self.video.clicked.connect(lambda: self.change_page(0))
+        self.video.clicked.connect(self._load_image_by_dialog)
         self.camera.clicked.connect(lambda: self.change_page(1))
         self.predict.clicked.connect(lambda: self.change_page(2))
  
