@@ -17,8 +17,9 @@ from PySide6.QtGui import (QAction, QBrush, QColor, QConicalGradient,
     QPainter, QPalette, QPixmap, QRadialGradient,
     QTransform)
 from PySide6.QtWidgets import (QApplication, QFrame, QHBoxLayout, QLabel,
-    QMainWindow, QPushButton, QSizePolicy, QSpacerItem,
-    QStackedWidget, QStatusBar, QVBoxLayout, QWidget)
+    QMainWindow, QProgressBar, QPushButton, QSizePolicy,
+    QSpacerItem, QStackedWidget, QStatusBar, QVBoxLayout,
+    QWidget)
 
 from widgets.CamWidget import CamWidget
 from widgets.CustomSlideMenu import CustomSlideMenu
@@ -28,7 +29,7 @@ class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         if not MainWindow.objectName():
             MainWindow.setObjectName(u"MainWindow")
-        MainWindow.resize(924, 653)
+        MainWindow.resize(923, 653)
         sizePolicy = QSizePolicy(QSizePolicy.Expanding, QSizePolicy.Preferred)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
@@ -37,15 +38,15 @@ class Ui_MainWindow(object):
         font = QFont()
         font.setPointSize(10)
         MainWindow.setFont(font)
-        MainWindow.setStyleSheet(u"")
+        MainWindow.setStyleSheet(u"QPushButton:pressed {\n"
+"    background-color:  rgb(118, 118, 118);\n"
+"}")
         self.action = QAction(MainWindow)
         self.action.setObjectName(u"action")
         self.centralwidget = QWidget(MainWindow)
         self.centralwidget.setObjectName(u"centralwidget")
         self.verticalLayout = QVBoxLayout(self.centralwidget)
-        self.verticalLayout.setSpacing(0)
         self.verticalLayout.setObjectName(u"verticalLayout")
-        self.verticalLayout.setContentsMargins(0, 0, 0, 0)
         self.header = QFrame(self.centralwidget)
         self.header.setObjectName(u"header")
         sizePolicy1 = QSizePolicy(QSizePolicy.Preferred, QSizePolicy.Fixed)
@@ -73,6 +74,10 @@ class Ui_MainWindow(object):
         font2 = QFont()
         font2.setPointSize(13)
         self.menuButton.setFont(font2)
+        self.menuButton.setStyleSheet(u"QPushButton:pressed {\n"
+"	background-color: rgb(86, 120, 121)\n"
+"}\n"
+"")
         icon = QIcon()
         icon.addFile(u":/icon/icon/menu.ico", QSize(), QIcon.Normal, QIcon.Off)
         self.menuButton.setIcon(icon)
@@ -131,6 +136,10 @@ class Ui_MainWindow(object):
         self.video = QPushButton(self.menu)
         self.video.setObjectName(u"video")
         self.video.setEnabled(True)
+        self.video.setStyleSheet(u"QPushButton:pressed {\n"
+"	background-color: rgb(86, 120, 121)\n"
+"}\n"
+"")
         icon1 = QIcon()
         icon1.addFile(u":/icon/icon/upload.ico", QSize(), QIcon.Normal, QIcon.Off)
         self.video.setIcon(icon1)
@@ -142,6 +151,10 @@ class Ui_MainWindow(object):
         self.camera = QPushButton(self.menu)
         self.camera.setObjectName(u"camera")
         self.camera.setEnabled(True)
+        self.camera.setStyleSheet(u"QPushButton:pressed {\n"
+"	background-color: rgb(86, 120, 121)\n"
+"}\n"
+"")
         icon2 = QIcon()
         icon2.addFile(u":/icon/icon/camer.ico", QSize(), QIcon.Normal, QIcon.Off)
         self.camera.setIcon(icon2)
@@ -152,6 +165,10 @@ class Ui_MainWindow(object):
 
         self.predict = QPushButton(self.menu)
         self.predict.setObjectName(u"predict")
+        self.predict.setStyleSheet(u"QPushButton:pressed {\n"
+"	background-color: rgb(86, 120, 121)\n"
+"}\n"
+"")
         icon3 = QIcon()
         icon3.addFile(u":/icon/icon/clipboard.ico", QSize(), QIcon.Normal, QIcon.Off)
         self.predict.setIcon(icon3)
@@ -166,6 +183,11 @@ class Ui_MainWindow(object):
 
         self.settings = QPushButton(self.menu)
         self.settings.setObjectName(u"settings")
+        self.settings.setEnabled(True)
+        self.settings.setStyleSheet(u"QPushButton:pressed {\n"
+"	background-color: rgb(86, 120, 121)\n"
+"}\n"
+"")
         icon4 = QIcon()
         icon4.addFile(u":/icon/icon/setting.ico", QSize(), QIcon.Normal, QIcon.Off)
         self.settings.setIcon(icon4)
@@ -198,23 +220,55 @@ class Ui_MainWindow(object):
         self.verticalLayout_2.setObjectName(u"verticalLayout_2")
         self.label_4 = QLabel(self.page_0)
         self.label_4.setObjectName(u"label_4")
+        font5 = QFont()
+        font5.setPointSize(20)
+        font5.setBold(False)
+        self.label_4.setFont(font5)
 
         self.verticalLayout_2.addWidget(self.label_4)
+
+        self.progressBar = QProgressBar(self.page_0)
+        self.progressBar.setObjectName(u"progressBar")
+        font6 = QFont()
+        font6.setPointSize(20)
+        self.progressBar.setFont(font6)
+        self.progressBar.setStyleSheet(u"background-color: rgb(35, 35, 35);")
+        self.progressBar.setValue(50)
+
+        self.verticalLayout_2.addWidget(self.progressBar)
 
         self.stackedWidget.addWidget(self.page_0)
         self.page_1 = QWidget()
         self.page_1.setObjectName(u"page_1")
         sizePolicy.setHeightForWidth(self.page_1.sizePolicy().hasHeightForWidth())
         self.page_1.setSizePolicy(sizePolicy)
-        font5 = QFont()
-        font5.setKerning(True)
-        self.page_1.setFont(font5)
-        self.horizontalLayout_2 = QHBoxLayout(self.page_1)
-        self.horizontalLayout_2.setObjectName(u"horizontalLayout_2")
+        font7 = QFont()
+        font7.setKerning(True)
+        self.page_1.setFont(font7)
+        self.verticalLayout_4 = QVBoxLayout(self.page_1)
+        self.verticalLayout_4.setObjectName(u"verticalLayout_4")
         self.webcamera = CamWidget(self.page_1)
         self.webcamera.setObjectName(u"webcamera")
 
-        self.horizontalLayout_2.addWidget(self.webcamera)
+        self.verticalLayout_4.addWidget(self.webcamera)
+
+        self.pushButton = QPushButton(self.page_1)
+        self.pushButton.setObjectName(u"pushButton")
+        font8 = QFont()
+        font8.setBold(True)
+        self.pushButton.setFont(font8)
+        self.pushButton.setStyleSheet(u"QPushButton {\n"
+"    border-radius:  10px;\n"
+"    background-color:  rgb(37, 37, 37);\n"
+"    color:  rgb(255, 255, 255);\n"
+"    font-size:  20px;\n"
+"}\n"
+"QPushButton:pressed {\n"
+"    background-color:  rgb(118, 118, 118);\n"
+"}\n"
+"")
+
+        self.verticalLayout_4.addWidget(self.pushButton)
 
         self.stackedWidget.addWidget(self.page_1)
         self.page_3 = QWidget()
@@ -222,13 +276,29 @@ class Ui_MainWindow(object):
         self.page_3.setEnabled(True)
         sizePolicy.setHeightForWidth(self.page_3.sizePolicy().hasHeightForWidth())
         self.page_3.setSizePolicy(sizePolicy)
-        self.horizontalLayout_3 = QHBoxLayout(self.page_3)
-        self.horizontalLayout_3.setObjectName(u"horizontalLayout_3")
+        self.verticalLayout_5 = QVBoxLayout(self.page_3)
+        self.verticalLayout_5.setObjectName(u"verticalLayout_5")
         self.label_2 = QLabel(self.page_3)
         self.label_2.setObjectName(u"label_2")
         self.label_2.setEnabled(True)
 
-        self.horizontalLayout_3.addWidget(self.label_2)
+        self.verticalLayout_5.addWidget(self.label_2)
+
+        self.save_result = QPushButton(self.page_3)
+        self.save_result.setObjectName(u"save_result")
+        self.save_result.setFont(font8)
+        self.save_result.setStyleSheet(u"QPushButton {\n"
+"    border-radius:  10px;\n"
+"    background-color:  rgb(37, 37, 37);\n"
+"    color:  rgb(255, 255, 255);\n"
+"    font-size:  20px;\n"
+"}\n"
+"QPushButton:pressed {\n"
+"    background-color:  rgb(118, 118, 118);\n"
+"}\n"
+"")
+
+        self.verticalLayout_5.addWidget(self.save_result)
 
         self.stackedWidget.addWidget(self.page_3)
 
@@ -244,6 +314,9 @@ class Ui_MainWindow(object):
 
         self.retranslateUi(MainWindow)
 
+        self.stackedWidget.setCurrentIndex(2)
+
+
         QMetaObject.connectSlotsByName(MainWindow)
     # setupUi
 
@@ -256,7 +329,9 @@ class Ui_MainWindow(object):
         self.camera.setText("")
         self.predict.setText("")
         self.settings.setText("")
-        self.label_4.setText(QCoreApplication.translate("MainWindow", u"Video", None))
+        self.label_4.setText(QCoreApplication.translate("MainWindow", u"\u041c\u043e\u0434\u0435\u043b\u044c \u043f\u0440\u0435\u0434\u0441\u043a\u0430\u0437\u044b\u0432\u0430\u0435\u0442 \u043f\u043e\u0434\u043e\u0436\u0434\u0438\u0442\u0435...", None))
+        self.pushButton.setText(QCoreApplication.translate("MainWindow", u"\u041f\u043e\u043b\u0443\u0447\u0438\u0442\u044c \u0440\u0435\u0437\u0443\u043b\u044c\u0442\u0430\u0442", None))
         self.label_2.setText(QCoreApplication.translate("MainWindow", u"Result", None))
+        self.save_result.setText(QCoreApplication.translate("MainWindow", u"\u0421\u043e\u0445\u0440\u0430\u043d\u0438\u0442\u044c \u0440\u0435\u0437\u0443\u043b\u044c\u0442\u0430\u0442", None))
     # retranslateUi
 
