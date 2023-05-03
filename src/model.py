@@ -10,15 +10,11 @@ class ModelDetect(nn.Module):
         super(ModelDetect, self).__init__()
         self.model = YOLO(PATH_WEIGHT_DETECTION)
         self.model.val()
-        # self.predict = None
 
     def forward(self, img, conf=0.8):
         # картику не нужно преобразовывать в torch после прочтения cv2
         predict = self.model.predict(source=img, conf=conf)
         return predict
-    
-    # def save_res(self, name):
-    #     cv2.imwrite(name, self.predict[0].plot())
 
 
 class ModelClassificationZLine(nn.Module):
