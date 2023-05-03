@@ -1,7 +1,6 @@
 from ultralytics import YOLO
-import torch
+from torch import load
 import torch.nn as nn
-import cv2
 
 PATH_WEIGHT_DETECTION = "E:/7/KPP/ApplicationDetectEsophagit/weights_model/detection/best_yolov8.pt"
 PATH_WEIGHT_CLASSIFICATION = "E:/7/KPP/ApplicationDetectEsophagit/weights_model/classification/densnet121_softmax_eph50.pt"
@@ -25,7 +24,7 @@ class ModelDetect(nn.Module):
 class ModelClassificationZLine(nn.Module):
     def __init__(self):
         super(ModelClassificationZLine, self).__init__()
-        self.model = torch.load(PATH_WEIGHT_CLASSIFICATION)
+        self.model = load(PATH_WEIGHT_CLASSIFICATION)
     
     def forward(self, img):
         # картинка прочитана и переведена в торч
