@@ -5,11 +5,15 @@ TRESHOLD_ZLINE = 25
 TRESHOLD_NOTLINE = 80 
 TRESHOLD_COUNT_TRUE_PRED = 3
 TRESHOLD_COUNT_FALSE_PRED = 5
+TRESHOLD_STOP_PREDICTION = 150
 
 class PredictClassification():
-    def __init__(self, path_video):
+    def __init__(self, path_video, stride=4/60):
+        """
+        stride: сколько кадров пропускать в видео.
+        """
         self.model = ModelClassificationZLine()
-        self.dataset = VideoToBatchImage(path_video)
+        self.dataset = VideoToBatchImage(path_video, stride= stride)
         
         self.count_true = 0
         self.count_false = 0
@@ -19,6 +23,8 @@ class PredictClassification():
 
         for img in self.dataset:
             self.check_classification(img, self.predict(img))
+            if len(self.res) > 0 and self.count_false > TRESHOLD_STOP_PREDICTION:
+                break
     
     def predict(self, img):
         pred = self.model(img)
@@ -39,7 +45,7 @@ class PredictClassification():
         pred_zline = fanc_pred_proc(predict[0][1])
         pred_notline = fanc_pred_proc(predict[0][0])
         
-        if pred_zline > TRESHOLD_ZLINE and self.count_true < TRESHOLD_COUNT_TRUE_PRED:
+        if pred_zline >= TRESHOLD_ZLINE:
             self.count_false = 0
             self.count_true += 1
             self.list_img_true.append(img)
@@ -51,7 +57,7 @@ class PredictClassification():
         if self.count_false > TRESHOLD_COUNT_FALSE_PRED:
             self.list_img_true = []
             self.list_img_false = []
-        if self.count_true > TRESHOLD_COUNT_TRUE_PRED:
+        elif self.count_true >= TRESHOLD_COUNT_TRUE_PRED:
             if len(self.list_img_false) > 0:
                 self.res = self.list_img_true + self.list_img_false
             else:
@@ -61,9 +67,6 @@ class PredictClassification():
             self.list_img_false = []
             
         return self.res
-
-    def save_res(self):
-        """
-        Метод для сохранения изображений в директорию проекта.
-        """
-        pass
+    
+    def __getitem__(self, index):
+        return self.res[index]
