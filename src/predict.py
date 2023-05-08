@@ -1,5 +1,6 @@
 from dataset import VideoToBatchImage
-from model import ModelClassificationZLine
+from model import ModelClassificationZLine, ModelDetect
+import cv2
 
 TRESHOLD_ZLINE = 25
 TRESHOLD_NOTLINE = 80 
@@ -64,3 +65,17 @@ class PredictClassification():
     
     def __getitem__(self, index):
         return self.res[index]
+
+class PredictDetection():
+    def __init__(self, path_save, list_img):
+        self.path_save = path_save
+        self.model = ModelDetect()
+        
+        for i, img in enumerate(list_img):
+            img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
+            res = self.model(img)
+            self.save_res(i, res)
+            
+    def save_res(self, i, pred):
+        path = self.path_save + '/'+ str(i) + '.png'
+        cv2.imwrite(path, pred[0].plot())
