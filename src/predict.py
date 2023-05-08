@@ -1,5 +1,3 @@
-import torch
-
 from dataset import VideoToBatchImage
 from model import ModelClassificationZLine
 
