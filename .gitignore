@@ -162,5 +162,7 @@ cython_debug/
 # weight model
 weights_model/
 
+prediction/
+
 #удалить после проработки
 src/*.ipynb

@@ -3,9 +3,10 @@ from model import ModelClassificationZLine
 
 TRESHOLD_ZLINE = 25
 TRESHOLD_NOTLINE = 80 
-TRESHOLD_COUNT_TRUE_PRED = 3
+TRESHOLD_COUNT_TRUE_PRED = 2
 TRESHOLD_COUNT_FALSE_PRED = 5
-TRESHOLD_STOP_PREDICTION = 150
+TRESHOLD_STOP_PREDICTION = 100
+STOP_PREDICTION = 20
 
 class PredictClassification():
     def __init__(self, path_video, stride=4/60):
@@ -15,15 +16,13 @@ class PredictClassification():
         self.model = ModelClassificationZLine()
         self.dataset = VideoToBatchImage(path_video, stride= stride)
         
-        self.count_true = 0
-        self.count_false = 0
         self.list_img_true = []
         self.list_img_false = []
         self.res = []
 
         for img in self.dataset:
             self.check_classification(img, self.predict(img))
-            if len(self.res) > 0 and self.count_false > TRESHOLD_STOP_PREDICTION:
+            if len(self.res) > 0 and self.count_false > TRESHOLD_STOP_PREDICTION or len(self.res) > STOP_PREDICTION:
                 break
     
     def predict(self, img):
@@ -46,25 +45,20 @@ class PredictClassification():
         pred_notline = fanc_pred_proc(predict[0][0])
         
         if pred_zline >= TRESHOLD_ZLINE:
-            self.count_false = 0
-            self.count_true += 1
             self.list_img_true.append(img)
+            self.list_img_false = [] 
         elif pred_notline >= TRESHOLD_NOTLINE:
-            self.count_true = 0
             self.list_img_false.append(img)
-            self.count_false += 1
+            self.list_img_true = []
 
-        if self.count_false > TRESHOLD_COUNT_FALSE_PRED:
+        if len(self.list_img_false) > TRESHOLD_COUNT_FALSE_PRED:
             self.list_img_true = []
             self.list_img_false = []
-        elif self.count_true >= TRESHOLD_COUNT_TRUE_PRED:
+        elif len(self.list_img_true) >= TRESHOLD_COUNT_TRUE_PRED:
             if len(self.list_img_false) > 0:
                 self.res = self.list_img_true + self.list_img_false
             else:
                 self.res = self.list_img_true
-
-            self.list_img_true = []
-            self.list_img_false = []
             
         return self.res
     
