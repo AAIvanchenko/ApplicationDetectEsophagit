@@ -17,14 +17,12 @@ class VideoToBatchImage:
                 path_video = str(p)  # files
         else:
             raise FileNotFoundError(f'{p} does not exist')
-        
-        # проверку перенести сюда
+  
         img_info = self.get_video_info(path_video)
         # Расчёт stride для каждого видео
         vid_stride = int(img_info["fps"]*stride) if stride else 1
         vid_stride_frames = vid_stride
         
-        # Проверка на количество кадров
         self.num_frames = img_info["frames"]
     
         if isinstance(img_size, int):
@@ -47,7 +45,6 @@ class VideoToBatchImage:
         path = self.path
 
         # Read video
-        # print('start', self.cap.get(cv2.CAP_PROP_POS_MSEC)/1000, self.cap.get(cv2.CAP_PROP_POS_FRAMES))
         ret_val, img0 = self.cap.read()
         assert ret_val is True, f'Error to read from file on {round(int(self.cap.get(cv2.CAP_PROP_FRAME_COUNT))/self.cap.get(cv2.CAP_PROP_FPS), 2)} sec by path:{path}'
         self.frame += 1
@@ -58,13 +55,12 @@ class VideoToBatchImage:
         if self.frame >= self.num_frames:
             self.cap.release()
             self.cap = None
-        # print(self.frame)
-        self.cap.set(cv2.CAP_PROP_POS_FRAMES, self.frame)
-        # print('count_frame', int(self.cap.get(cv2.CAP_PROP_FRAME_COUNT)))
-
-        img = letterbox(img0, self.img_size, scaleFill=self.scaleFill)
+        else:
+            self.cap.set(cv2.CAP_PROP_POS_FRAMES, self.frame)
+        
         # Convert
-        img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB) # BGR to RGB
+        img = cv2.cvtColor(img0, cv2.COLOR_BGR2RGB) # BGR to RGB
+        img = letterbox(img, self.img_size, scaleFill=self.scaleFill)
         
         if self.transforms:
             img = self.transforms(img)

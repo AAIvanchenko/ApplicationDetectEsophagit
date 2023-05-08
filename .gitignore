@@ -164,3 +164,4 @@ weights_model/
 
 #удалить после проработки
 src/predict.py
+src/*.ipynb
