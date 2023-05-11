@@ -10,7 +10,7 @@ TRESHOLD_STOP_PREDICTION = 100
 STOP_PREDICTION = 20
 
 class PredictClassification():
-    def __init__(self, path_video, stride=4/60):
+    def __init__(self, path_video, stride=2/60):
         """
         stride: сколько кадров пропускать в видео.
         """

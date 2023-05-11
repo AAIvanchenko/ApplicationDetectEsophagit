@@ -1,13 +1,15 @@
 import os
 from platform import system
+import shutil
 
-
-from PySide6.QtWidgets import QFileDialog, QMenu
+from PySide6.QtWidgets import QFileDialog, QMenu, QMessageBox
 from PySide6.QtCore import Slot
 from ui.ui_MainWindow import QMainWindow, Ui_MainWindow
 from PySide6.QtMultimedia import QMediaDevices
 
+from src.startPredict import StartPredict
 
+PATH_SAVE = 'prediction'
 
 class MainWindow(QMainWindow, Ui_MainWindow):
     def __init__(self, parent=None) -> None:
@@ -20,10 +22,11 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self._menu_is_collapsed = False
         self.menuButton.clicked.connect(self.menu.slideLeftMenu)
 
-        
         #нажатие на кнопки
         self.video.clicked.connect(lambda: self.change_page(0))
         self.video.clicked.connect(self._load_image_by_dialog)
+        self.video.clicked.connect(self.pred)
+
         self.camera.clicked.connect(lambda: self.change_page(1))
         self.predict.clicked.connect(lambda: self.change_page(2))
  
@@ -32,9 +35,11 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         #show window
         self.show()
 
-        # print(cv2.CAP_DSHOW)
-        # print([cam.description() for cam in QMediaDevices.videoInputs()])
-   
+    def pred(self):
+        if self.path_video != None:
+            test = StartPredict(self.path_video)
+            print(test)
+
     # настройки
     def create_menu(self):
         impMenu = QMenu(self)
@@ -58,13 +63,11 @@ class MainWindow(QMainWindow, Ui_MainWindow):
     
     @Slot(int)
     def connect_camera(self, index_camera):
-        # print(index_camera)
         self.webcamera.close()
         self.webcamera.wait()
         self.webcamera.connect_camera(index_camera)
-        # print(index_camera)
       
-    # будет это Slot
+    @Slot(int)
     def change_page(self, index_page):
         if index_page == 1:
             self.connect_camera(0)
@@ -72,9 +75,8 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             self.webcamera.close()
             self.webcamera.wait()
         self.stackedWidget.setCurrentIndex(index_page)
-
     
-    # будет это Slot
+    @Slot()
     def menuCollapsed(self):
         self.menu.setVisible(self._menu_is_collapsed)
         self._menu_is_collapsed = not self._menu_is_collapsed
@@ -100,10 +102,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         # Запоминание выбранной директории
         self.image_directory = os.path.dirname(file_path)
         self.path_video = file_path
-        # print(self.image_directory)
-        # print(file_path)
 
-    
     def take_home_path(self) -> str:
         """
         Метод, возвращающий домашнюю директорию пользователя.
@@ -117,10 +116,25 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
         return home_path
 
-
     def closeEvent(self, event) -> None:
             self.webcamera.close()
             self.webcamera.wait()
             # Accept the event
             event.accept()
 
+    def clear_predict(self):
+        if os.path.isdir(PATH_SAVE):
+            shutil.rmtree(PATH_SAVE)
+
+    def closeEvent(self, event):
+        # Переопределить colseEvent
+        reply = QMessageBox.question\
+        (self, 'Выход',
+            "Вы уверены, что хотите уйти? \n Данные предсказаний будут удалены",
+                QMessageBox.Yes,
+                QMessageBox.No)
+        if reply == QMessageBox.Yes:
+            self.clear_predict()
+            event.accept()
+        else:
+            event.ignore()
