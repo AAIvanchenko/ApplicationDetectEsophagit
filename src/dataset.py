@@ -1,7 +1,7 @@
 from pathlib import Path
 import cv2
 
-from preprocessing_img import letterbox
+from src.preprocessing_img import letterbox
 
 # нужно будет при вызове данного класса написать трансформ с данной функцией: del_area_behind_countour
 

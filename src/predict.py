@@ -1,6 +1,7 @@
-from dataset import VideoToBatchImage
-from model import ModelClassificationZLine, ModelDetect
+from src.dataset import VideoToBatchImage
+from src.model import ModelClassificationZLine, ModelDetect
 import cv2
+import os
 
 TRESHOLD_ZLINE = 25
 TRESHOLD_NOTLINE = 80 
@@ -65,6 +66,10 @@ class PredictClassification():
     
     def __getitem__(self, index):
         return self.res[index]
+    
+    def __len__(self):
+        return len(self.res)
+
 
 class PredictDetection():
     def __init__(self, path_save, list_img):
@@ -74,8 +79,14 @@ class PredictDetection():
         for i, img in enumerate(list_img):
             img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
             res = self.model(img)
-            self.save_res(i, res)
+            # сохраняем картинки только с боксами
+            if len(res[0].boxes) > 0:
+                self.save_res(i, res[0])
             
     def save_res(self, i, pred):
+        # создание папки для сохранения картинок
+        if not os.path.isdir(self.path_save):
+            os.mkdir(self.path_save)
+
         path = self.path_save + '/'+ str(i) + '.png'
-        cv2.imwrite(path, pred[0].plot())
+        cv2.imwrite(path, pred.plot())
