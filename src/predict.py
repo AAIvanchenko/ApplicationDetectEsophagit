@@ -24,7 +24,7 @@ class PredictClassification():
 
         for img in self.dataset:
             self.check_classification(img, self.predict(img))
-            if len(self.res) > 0 and self.count_false > TRESHOLD_STOP_PREDICTION or len(self.res) > STOP_PREDICTION:
+            if len(self.res) > 0 and len(self.list_img_false) > TRESHOLD_STOP_PREDICTION or len(self.res) > STOP_PREDICTION:
                 break
     
     def predict(self, img):
@@ -84,9 +84,12 @@ class PredictDetection():
                 self.save_res(i, res[0])
             
     def save_res(self, i, pred):
+        print('пошло сохранение')
         # создание папки для сохранения картинок
-        if not os.path.isdir(self.path_save):
+        try:
             os.mkdir(self.path_save)
+        except:
+            pass
 
         path = self.path_save + '/'+ str(i) + '.png'
         cv2.imwrite(path, pred.plot())
